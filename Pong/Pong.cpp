@@ -1,12 +1,12 @@
+#include <sstream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include <sstream>
+#include "Screen.h"
 
 int main() {
-	//Creating and configuring the RenderWindow
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Pong");
-	window.setFramerateLimit(60);
-	window.setKeyRepeatEnabled(false);
+	
+	sf::Screen screen(800, 600, "Pong");
+	screen.setBackground("Data/background.png");
 
 	//Load font
 	sf::Font font;
@@ -24,7 +24,7 @@ int main() {
 	//Load Textures
 	sf::Texture padTexture;
 	sf::Texture ballTexture;
-	sf::Texture backgroundTexture;
+	
 
 	if (!(padTexture.loadFromFile("Data/pad.png"))) {
 		return 1;
@@ -34,10 +34,7 @@ int main() {
 		return 1;
 	}
 
-	if (!(backgroundTexture.loadFromFile("Data/background.png"))) {
-		return 1;
-	}
-
+	
 	//Load sound
 	sf::SoundBuffer hitBuffer;
 	sf::Sound hit;
@@ -60,11 +57,7 @@ int main() {
 	int pad2Score = 0;
 
 //Shapes
-	//Background
-	sf::RectangleShape background;
-	background.setSize(sf::Vector2f(800, 600));
-	background.setPosition(0, 0);
-	background.setTexture(&backgroundTexture);
+	
 
 	//Pad1
 	sf::RectangleShape pad1;
@@ -84,17 +77,22 @@ int main() {
 	ball.setPosition(400, 200);
 	ball.setTexture(&ballTexture);
 
+	screen.addDrawable(&pad1);
+	screen.addDrawable(&pad2);
+	screen.addDrawable(&ball);
+	screen.addDrawable(&score);
+
 	//Event object
 	sf::Event event;
 
 	//Game loop
-	while (window.isOpen()) {
+	while (screen.isOpen()) {
 
 		//Event handling loop
-		while (window.pollEvent(event)) {
+		while (screen.pollEvent(event)) {
 			switch (event.type) {
 			case sf::Event::Closed:
-				window.close();
+				screen.close();
 				break;
 
 			case sf::Event::KeyPressed:
@@ -196,11 +194,13 @@ int main() {
 		if (ball.getPosition().x < -50) {
 			pad2Score++;
 			ball.setPosition(375, 275);
+			xVelocityBall = -4;
 		}
 
 		if (ball.getPosition().x > 800) {
 			pad1Score++;
 			ball.setPosition(375, 275);
+			xVelocityBall = -4;
 		}
 
 		if (ball.getGlobalBounds().intersects(pad1.getGlobalBounds())) {
@@ -214,26 +214,23 @@ int main() {
 		}
 
 		//Rendering
-		window.clear();
+		screen.clear();
 
 		//Drawing the shapes
-		window.draw(background);
-		window.draw(pad1);
-		window.draw(pad2);
-		window.draw(ball);
-
-		//Score
 		std::stringstream text;
 		text << pad1Score << " : " << pad2Score;
 		score.setString(text.str());
-		window.draw(score);
-		window.display();
+		screen.draw();
+
+		//Score
+		
+		screen.display();
 	}
 
 	//Clean up
-	if (window.isOpen()) {
+	/*if (window.isOpen()) {
 		window.close();
-	}
+	}*/
 
 	return 0;
 }

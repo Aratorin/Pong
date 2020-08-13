@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <sstream>
 
 int main() {
 	//Creating and configuring the RenderWindow
@@ -12,6 +13,13 @@ int main() {
 	if (!(font.loadFromFile("Data/arial.ttf"))) {
 		return 1;
 	}
+
+	sf::Text score;
+	score.setFont(font);
+	score.setCharacterSize(30);
+	score.setFillColor(sf::Color::Red);
+	score.setPosition(375, 10);
+	score.setString("0 : 0");
 
 	//Load Textures
 	sf::Texture padTexture;
@@ -48,6 +56,8 @@ int main() {
 	int yVelocityPad2 = 0;
 	int xVelocityBall = -4;
 	int yVelocityBall = -4;
+	int pad1Score = 0;
+	int pad2Score = 0;
 
 //Shapes
 	//Background
@@ -183,13 +193,15 @@ int main() {
 			yVelocityBall = -yVelocityBall;
 		}
 
-		/*if (ball.getPosition().x < 0) {
-			xVelocityBall = -xVelocityBall;
+		if (ball.getPosition().x < -50) {
+			pad2Score++;
+			ball.setPosition(375, 275);
 		}
 
-		if (ball.getPosition().x > 750) {
-			xVelocityBall = -xVelocityBall;
-		}*/
+		if (ball.getPosition().x > 800) {
+			pad1Score++;
+			ball.setPosition(375, 275);
+		}
 
 		if (ball.getGlobalBounds().intersects(pad1.getGlobalBounds())) {
 			xVelocityBall = -xVelocityBall;
@@ -210,6 +222,11 @@ int main() {
 		window.draw(pad2);
 		window.draw(ball);
 
+		//Score
+		std::stringstream text;
+		text << pad1Score << " : " << pad2Score;
+		score.setString(text.str());
+		window.draw(score);
 		window.display();
 	}
 

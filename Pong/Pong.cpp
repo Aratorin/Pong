@@ -38,8 +38,13 @@ int main() {
 	}
 
 	//States
+	bool upKey = false;
+	bool downKey = false;
 
 	//Variables
+	int yVelocityPad1 = 0;
+	int xVelocityBall = -3;
+	int yVelocityBall = -3;
 
 //Shapes
 	//Background
@@ -77,18 +82,101 @@ int main() {
 			switch (event.type) {
 			case sf::Event::Closed:
 				window.close();
+				break;
+
+			case sf::Event::KeyPressed:
+				switch (event.key.code) {
+				case sf::Keyboard::Up:
+					upKey = true;
+					break;
+
+				case sf::Keyboard::Down:
+					downKey = true;
+					break;
+
+				default:
+					break;
+				}
+				break;
+
+			case sf::Event::KeyReleased:
+				switch (event.key.code) {
+				case sf::Keyboard::Up:
+					upKey = false;
+					break;
+
+				case sf::Keyboard::Down:
+					downKey = false;
+					break;
+
+				default:
+					break;
+				}
+				break;
 
 			default:
 				break;
 			}
 		}
 
+		//Logic
+		//Pad1
+		if (upKey) {
+			yVelocityPad1 = -5;
+		}
+
+		if (downKey) {
+			yVelocityPad1 = 5;
+		}
+
+		if (upKey && downKey) {
+			yVelocityPad1 = 0;
+		}
+
+		if (!upKey && !downKey) {
+			yVelocityPad1 = 0;
+		}
+
+		pad1.move(0, yVelocityPad1);
+
+		//Out of bounds check
+		if (pad1.getPosition().y < 0) {
+			pad1.setPosition(50, 0);
+		}
+
+		if (pad1.getPosition().y > 500) {
+			pad1.setPosition(50, 500);
+		}
+
+		//Ball
+		ball.move(xVelocityBall, yVelocityBall);
+
+		//Out of bounds check
+		if (ball.getPosition().y < 0) {
+			yVelocityBall = -yVelocityBall;
+		}
+
+		if (ball.getPosition().y > 550) {
+			yVelocityBall = -yVelocityBall;
+		}
+
+		if (ball.getPosition().x < 0) {
+			xVelocityBall = -xVelocityBall;
+		}
+
+		if (ball.getPosition().x > 750) {
+			xVelocityBall = -xVelocityBall;
+		}
+
 		//Rendering
 		window.clear();
+
+		//Drawing the shapes
 		window.draw(background);
 		window.draw(pad1);
 		window.draw(pad2);
 		window.draw(ball);
+
 		window.display();
 	}
 

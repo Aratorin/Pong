@@ -32,6 +32,8 @@ int main() {
 
 	//Load sound
 	sf::SoundBuffer hitBuffer;
+	sf::Sound hit;
+	hit.setBuffer(hitBuffer);
 
 	if (!(hitBuffer.loadFromFile("Data/hit.wav"))) {
 		return 1;
@@ -43,8 +45,9 @@ int main() {
 
 	//Variables
 	int yVelocityPad1 = 0;
-	int xVelocityBall = -3;
-	int yVelocityBall = -3;
+	int yVelocityPad2 = 0;
+	int xVelocityBall = -4;
+	int yVelocityBall = -4;
 
 //Shapes
 	//Background
@@ -148,6 +151,26 @@ int main() {
 			pad1.setPosition(50, 500);
 		}
 
+		//Pad2
+		if (ball.getPosition().y < pad2.getPosition().y) {
+			yVelocityPad2 = -2;
+		}
+
+		if (ball.getPosition().y > pad2.getPosition().y) {
+			yVelocityPad2 = 2;
+		}
+
+		pad2.move(0, yVelocityPad2);
+
+		//Out of bounds check
+		if (pad2.getPosition().y < 0) {
+			pad2.setPosition(700, 0);
+		}
+
+		if (pad2.getPosition().y > 500) {
+			pad2.setPosition(700, 500);
+		}
+
 		//Ball
 		ball.move(xVelocityBall, yVelocityBall);
 
@@ -160,12 +183,22 @@ int main() {
 			yVelocityBall = -yVelocityBall;
 		}
 
-		if (ball.getPosition().x < 0) {
+		/*if (ball.getPosition().x < 0) {
 			xVelocityBall = -xVelocityBall;
 		}
 
 		if (ball.getPosition().x > 750) {
 			xVelocityBall = -xVelocityBall;
+		}*/
+
+		if (ball.getGlobalBounds().intersects(pad1.getGlobalBounds())) {
+			xVelocityBall = -xVelocityBall;
+			hit.play();
+		}
+
+		if (ball.getGlobalBounds().intersects(pad2.getGlobalBounds())) {
+			xVelocityBall = -xVelocityBall;
+			hit.play();
 		}
 
 		//Rendering

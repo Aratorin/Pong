@@ -37,6 +37,35 @@ int main() {
 		return 1;
 	}
 
+	//States
+
+	//Variables
+
+//Shapes
+	//Background
+	sf::RectangleShape background;
+	background.setSize(sf::Vector2f(800, 600));
+	background.setPosition(0, 0);
+	background.setTexture(&backgroundTexture);
+
+	//Pad1
+	sf::RectangleShape pad1;
+	pad1.setSize(sf::Vector2f(50, 100));
+	pad1.setPosition(50, 200);
+	pad1.setTexture(&padTexture);
+
+	//Pad2
+	sf::RectangleShape pad2;
+	pad2.setSize(sf::Vector2f(50, 100));
+	pad2.setPosition(700, 200);
+	pad2.setTexture(&padTexture);
+
+	//Ball
+	sf::RectangleShape ball;
+	ball.setSize(sf::Vector2f(50, 50));
+	ball.setPosition(400, 200);
+	ball.setTexture(&ballTexture);
+
 	//Event object
 	sf::Event event;
 
@@ -56,7 +85,10 @@ int main() {
 
 		//Rendering
 		window.clear();
-
+		window.draw(background);
+		window.draw(pad1);
+		window.draw(pad2);
+		window.draw(ball);
 		window.display();
 	}
 

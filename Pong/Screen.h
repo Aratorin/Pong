@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <list>
 
 namespace sf {
@@ -14,6 +15,7 @@ namespace sf {
 		Texture backgroundTexture;
 		RectangleShape background;
 		std::list<Drawable*> drawables;
+		Music music;
 
 	public:
 		Screen(int width, int height, String title, Uint32 style = Style::Default);
@@ -26,6 +28,9 @@ namespace sf {
 		void clear();
 		void draw();
 		void display();
+		bool setMusic(String musicPath);
+		void setVolume(float volume);
+		void playMusic();
 
 	private:
 

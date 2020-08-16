@@ -7,18 +7,28 @@
 #include "ScoreBoard.h"
 #include <iostream>
 
-int main() {
+/*Sounds and Sprites from https://opengameart.org/
+Sprites by Nicolás A. Ortega (Deathsbreed)- copyright DeathsbreedGames
+Collision sound by Bart Kelsey
+Music by Trevor Lentz*/
 
+int main() {
 	//Create the render window
 	sf::Screen screen(800, 600, "Pong");
-	if (!screen.setBackground("Data/background.png")) {
+	if (!screen.setBackground("Data/background.jpg")) {
 		return 1;
 	}
+
+	if (!screen.setMusic("Data/music.wav")) {
+		return 2;
+	}
+
+	screen.setVolume(5);
 
 	//Create scoreboard
 	sf::ScoreBoard scoreboard(30, sf::Color::Red, 375, 10);
 	if (!(scoreboard.setFont("Data/arial.ttf"))) {
-		return 2;
+		return 3;
 	}
 
 	//States
@@ -30,26 +40,28 @@ int main() {
 //Shapes
 
 	//Left Paddle
-	sf::Paddle leftPaddle(50, 200, sf::Vector2f(50, 100));
-	if (!(leftPaddle.setTexture("Data/pad.png"))) {
-		return 3;
-	}
-
-	//Right Paddle
-	sf::Paddle rightPaddle(700, 200, sf::Vector2f(50, 100));
-	if (!(rightPaddle.setTexture("Data/pad.png"))) {
+	sf::Paddle leftPaddle(10, 200, sf::Vector2f(10, 108));
+	if (!(leftPaddle.setTexture("Data/leftPaddle.png"))) {
 		return 4;
 	}
 
-	//Ball
-	sf::Ball ball(400, 200, -4, -4, sf::Vector2f(50, 50));
-	if (!(ball.setTexture("Data/ball.png"))) {
+	//Right Paddle
+	sf::Paddle rightPaddle(780, 200, sf::Vector2f(10, 108));
+	if (!(rightPaddle.setTexture("Data/rightPaddle.png"))) {
 		return 5;
 	}
 
-	if (!(ball.setSound("Data/hit.wav"))) {
+	//Ball
+	sf::Ball ball(400, 200, -4, -4, sf::Vector2f(21, 21));
+	if (!(ball.setTexture("Data/ball.png"))) {
 		return 6;
 	}
+
+	if (!(ball.setSound("Data/bounce.wav"))) {
+		return 7;
+	}
+
+	ball.setVolume(10);
 
 	//Add Shapes to Screen
 	screen.addDrawable(&leftPaddle.getShape());
@@ -61,6 +73,7 @@ int main() {
 	sf::Event event;
 
 	//Game loop
+	screen.playMusic();
 	while (screen.isOpen()) {
 
 		//Event handling loop
@@ -127,11 +140,11 @@ int main() {
 
 		//Right Paddle
 		if (ball.getPosition().y < rightPaddle.getPosition().y) {
-			rightPaddle.setVelocity(-2);
+			rightPaddle.setVelocity(-3.75);
 		}
 
 		if (ball.getPosition().y > rightPaddle.getPosition().y) {
-			rightPaddle.setVelocity(2);
+			rightPaddle.setVelocity(3.75);
 		}
 
 		rightPaddle.move();

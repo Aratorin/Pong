@@ -29,6 +29,7 @@ namespace sf {
 		void setPosition(int xPosition, int yPosition);
 		void xBounce();
 		void playSound();
+		void setVolume(float volume);
 
 	private:
 		

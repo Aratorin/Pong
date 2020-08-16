@@ -50,13 +50,28 @@ namespace sf {
 
 	void Screen::draw() {
 		window.draw(background);
-		for (auto drawable:drawables) {
+		for (auto drawable : drawables) {
 			window.draw(*drawable);
 		}
 	}
 
 	void Screen::display() {
 		window.display();
+	}
+
+	bool Screen::setMusic(String musicPath) {
+		if (!(music.openFromFile(musicPath))) {
+			return false;
+		}
+		return true;
+	}
+
+	void Screen::setVolume(float volume) {
+		music.setVolume(volume);
+	}
+
+	void Screen::playMusic() {
+		music.play();
 	}
 
 }

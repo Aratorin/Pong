@@ -18,7 +18,7 @@ namespace sf {
 		return true;
 	}
 
-	void Paddle::setVelocity(int velocity) {
+	void Paddle::setVelocity(double velocity) {
 		this->velocity = velocity;
 	}
 

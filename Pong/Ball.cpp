@@ -74,4 +74,8 @@ namespace sf {
 		sound.play();
 	}
 
+	void Ball::setVolume(float volume) {
+		sound.setVolume(volume);
+	}
+
 }

@@ -11,12 +11,12 @@ namespace sf {
 		int yPosition;
 		Vector2f size;
 		Texture texture;
-		int velocity;
+		double velocity;
 		RectangleShape shape;
 	public:
 		Paddle(int xPosition, int yPosition, Vector2f size);
 		bool setTexture(String texturePath);
-		void setVelocity(int velocity);
+		void setVelocity(double velocity);
 		void move();
 		RectangleShape& getShape();
 		const Vector2f& getPosition();

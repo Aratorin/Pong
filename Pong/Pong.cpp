@@ -3,9 +3,10 @@
 #include <SFML/Audio.hpp>
 #include "Screen.h"
 #include "Paddle.h"
+#include "Ball.h"
 
 int main() {
-	
+
 	sf::Screen screen(800, 600, "Pong");
 	if (!screen.setBackground("Data/background.png")) {
 		return 1;
@@ -24,55 +25,42 @@ int main() {
 	score.setPosition(375, 10);
 	score.setString("0 : 0");
 
-	//Load Textures
-	sf::Texture ballTexture;
-	
-	if (!(ballTexture.loadFromFile("Data/ball.png"))) {
-		return 3;
-	}
-
-	//Load sound
-	sf::SoundBuffer hitBuffer;
-	sf::Sound hit;
-	hit.setBuffer(hitBuffer);
-
-	if (!(hitBuffer.loadFromFile("Data/hit.wav"))) {
-		return 4;
-	}
-
 	//States
 	bool upKey = false;
 	bool downKey = false;
 
 	//Variables
-	int xVelocityBall = -4;
-	int yVelocityBall = -4;
 	int pad1Score = 0;
 	int pad2Score = 0;
 
 //Shapes
-	
+
 	//Left Paddle
 	sf::Paddle leftPaddle(50, 200, sf::Vector2f(50, 100));
 	if (!(leftPaddle.setTexture("Data/pad.png"))) {
-		return 5;
+		return 3;
 	}
 
 	//Right Paddle
 	sf::Paddle rightPaddle(700, 200, sf::Vector2f(50, 100));
 	if (!(rightPaddle.setTexture("Data/pad.png"))) {
-		return 6;
+		return 4;
 	}
 
 	//Ball
-	sf::RectangleShape ball;
-	ball.setSize(sf::Vector2f(50, 50));
-	ball.setPosition(400, 200);
-	ball.setTexture(&ballTexture);
+	sf::Ball ball(400, 200, -4, -4, sf::Vector2f(50, 50));
+	if (!(ball.setTexture("Data/ball.png"))) {
+		return 5;
+	}
 
+	if (!(ball.setSound("Data/hit.wav"))) {
+		return 6;
+	}
+
+	//Add Shapes to Screen
 	screen.addDrawable(&leftPaddle.getShape());
 	screen.addDrawable(&rightPaddle.getShape());
-	screen.addDrawable(&ball);
+	screen.addDrawable(&ball.getShape());
 	screen.addDrawable(&score);
 
 	//Event object
@@ -142,7 +130,7 @@ int main() {
 		}
 
 		leftPaddle.move();
-		
+
 		//Right Paddle
 		if (ball.getPosition().y < rightPaddle.getPosition().y) {
 			rightPaddle.setVelocity(-2);
@@ -155,37 +143,31 @@ int main() {
 		rightPaddle.move();
 
 		//Ball
-		ball.move(xVelocityBall, yVelocityBall);
+		ball.move();
 
-		//Out of bounds check
-		if (ball.getPosition().y < 0) {
-			yVelocityBall = -yVelocityBall;
-		}
-
-		if (ball.getPosition().y > 550) {
-			yVelocityBall = -yVelocityBall;
-		}
-
+		
+		//Incrementing Score
 		if (ball.getPosition().x < -50) {
 			pad2Score++;
 			ball.setPosition(375, 275);
-			xVelocityBall = -4;
+			ball.setxVelocity(-4);
 		}
 
 		if (ball.getPosition().x > 800) {
 			pad1Score++;
 			ball.setPosition(375, 275);
-			xVelocityBall = -4;
+			ball.setxVelocity(-4);
 		}
 
+		//Collision Detection
 		if (ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds())) {
-			xVelocityBall = -xVelocityBall;
-			hit.play();
+			ball.xBounce();
+			ball.playSound();
 		}
 
 		if (ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds())) {
-			xVelocityBall = -xVelocityBall;
-			hit.play();
+			ball.xBounce();
+			ball.playSound();
 		}
 
 		//Rendering
@@ -198,7 +180,7 @@ int main() {
 		screen.draw();
 
 		//Score
-		
+
 		screen.display();
 	}
 

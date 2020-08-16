@@ -4,34 +4,28 @@
 #include "Screen.h"
 #include "Paddle.h"
 #include "Ball.h"
+#include "ScoreBoard.h"
+#include <iostream>
 
 int main() {
 
+	//Create the render window
 	sf::Screen screen(800, 600, "Pong");
 	if (!screen.setBackground("Data/background.png")) {
 		return 1;
 	}
 
-	//Load font
-	sf::Font font;
-	if (!(font.loadFromFile("Data/arial.ttf"))) {
+	//Create scoreboard
+	sf::ScoreBoard scoreboard(30, sf::Color::Red, 375, 10);
+	if (!(scoreboard.setFont("Data/arial.ttf"))) {
 		return 2;
 	}
-
-	sf::Text score;
-	score.setFont(font);
-	score.setCharacterSize(30);
-	score.setFillColor(sf::Color::Red);
-	score.setPosition(375, 10);
-	score.setString("0 : 0");
 
 	//States
 	bool upKey = false;
 	bool downKey = false;
-
-	//Variables
-	int pad1Score = 0;
-	int pad2Score = 0;
+	bool leftCollision = false;
+	bool rightCollision = false;
 
 //Shapes
 
@@ -61,7 +55,7 @@ int main() {
 	screen.addDrawable(&leftPaddle.getShape());
 	screen.addDrawable(&rightPaddle.getShape());
 	screen.addDrawable(&ball.getShape());
-	screen.addDrawable(&score);
+	screen.addDrawable(&scoreboard.getText());
 
 	//Event object
 	sf::Event event;
@@ -145,38 +139,42 @@ int main() {
 		//Ball
 		ball.move();
 
-		
+
 		//Incrementing Score
 		if (ball.getPosition().x < -50) {
-			pad2Score++;
+			scoreboard.addPointRight();
 			ball.setPosition(375, 275);
 			ball.setxVelocity(-4);
 		}
 
 		if (ball.getPosition().x > 800) {
-			pad1Score++;
+			scoreboard.addPointLeft();
 			ball.setPosition(375, 275);
 			ball.setxVelocity(-4);
 		}
 
 		//Collision Detection
-		if (ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds())) {
+		if (ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()) && !leftCollision) {
 			ball.xBounce();
 			ball.playSound();
+			leftCollision = true;
+		} else if (!(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))) {
+			leftCollision = false;
 		}
 
-		if (ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds())) {
+		if (ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()) && !rightCollision) {
 			ball.xBounce();
 			ball.playSound();
+			rightCollision = true;
+		} else if (!(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))) {
+			rightCollision = false;
 		}
 
 		//Rendering
 		screen.clear();
 
 		//Drawing the shapes
-		std::stringstream text;
-		text << pad1Score << " : " << pad2Score;
-		score.setString(text.str());
+		scoreboard.updateString();
 		screen.draw();
 
 		//Score

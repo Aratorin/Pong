@@ -2,11 +2,14 @@
 
 namespace sf {
 
+	int Screen::WIDTH = NULL;
+	int Screen::HEIGHT = NULL;
+
 	Screen::Screen(int width, int height, String title, Uint32 style) :window(VideoMode(width, height), title, style) {
 		window.setFramerateLimit(60);
 		window.setKeyRepeatEnabled(false);
-		this->width = window.getSize().x;
-		this->height = window.getSize().y;
+		WIDTH = window.getSize().x;
+		HEIGHT = window.getSize().y;
 	}
 
 	Screen::~Screen() {
@@ -18,9 +21,11 @@ namespace sf {
 			return false;
 		}
 
-		background.setSize(Vector2f(width, height));
+		background.setSize(Vector2f(WIDTH, HEIGHT));
 		background.setPosition(0, 0);
 		background.setTexture(&backgroundTexture);
+
+		return true;
 	}
 
 	bool Screen::isOpen() {

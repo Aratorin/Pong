@@ -6,8 +6,8 @@ namespace sf {
 
 	class Screen {
 	public:
-		int width;
-		int height;
+		static int WIDTH;
+		static int HEIGHT;
 
 	private:
 		RenderWindow window;

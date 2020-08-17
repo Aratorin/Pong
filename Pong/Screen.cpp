@@ -63,6 +63,9 @@ namespace sf {
 		if (!(music.openFromFile(musicPath))) {
 			return false;
 		}
+
+		music.setLoop(true);
+
 		return true;
 	}
 

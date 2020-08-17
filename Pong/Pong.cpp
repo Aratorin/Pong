@@ -1,11 +1,7 @@
-#include <sstream>
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include "Screen.h"
 #include "Paddle.h"
 #include "Ball.h"
 #include "ScoreBoard.h"
-#include <iostream>
 
 /*Sounds and Sprites from https://opengameart.org/
 Sprites by Nicolás A. Ortega (Deathsbreed)- copyright DeathsbreedGames
